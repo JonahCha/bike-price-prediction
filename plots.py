@@ -55,14 +55,15 @@ def _price_vs_age(s: dict, path: Path) -> Path:
 
 
 def _model_comparison(s: dict, path: Path) -> Path:
-    names = list(s["results"])
-    r2 = [s["results"][n]["r2"] for n in names]
+    names = list(s["cv"])
+    r2 = [s["cv"][n]["r2"] for n in names]
+    err = [s["cv"][n]["r2_std"] for n in names]
     fig, ax = plt.subplots(figsize=(7, 4))
-    bars = ax.bar(names, r2, color=[PALETTE[0], PALETTE[1], PALETTE[2]])
+    bars = ax.bar(names, r2, yerr=err, capsize=4, color=[PALETTE[0], PALETTE[1], PALETTE[2]])
     ax.bar_label(bars, labels=[f"{v:.3f}" for v in r2])
     ax.set_ylim(0, 1.05)
-    ax.set_ylabel("R-squared (test set)")
-    ax.set_title("Model comparison")
+    ax.set_ylabel("R-squared (5-fold CV, log price)")
+    ax.set_title("Model comparison (training data only)")
     return _finish(fig, path)
 
 

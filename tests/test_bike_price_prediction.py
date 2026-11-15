@@ -80,7 +80,8 @@ def test_group_feature(col, expected):
 def test_end_to_end_model_fits_well(tmp_path):
     path = make_bike_csv(tmp_path / "bikes.csv")
     s = run(path, reference_year=REF_YEAR)
-    assert s["best"] in s["results"]
-    assert s["results"][s["best"]]["r2"] > 0.5
+    assert s["best"] in s["cv"]
+    assert s["test"]["r2"] > 0.5
     assert s["n_test"] == 60
+    assert s["n_train"] == 240
     assert "bike_age" in s["drivers"].index or "km_driven" in s["drivers"].index
